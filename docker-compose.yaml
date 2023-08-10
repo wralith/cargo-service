@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=cargo
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=cargo
+    ports:
+      - 5432:5432
+  app:
+    build:
+      dockerfile: Dockerfile.dev
+    environment:
+      PG_CONN_STR: postgresql://cargo:password@db:5432/cargo?sslmode=disable
+      PORT: 8080
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
